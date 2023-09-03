@@ -1,0 +1,6 @@
+_build
+notebooks/introduction/.ipynb_checkpoints
+notebooks/supervised_learning/.ipynb_checkpoints
+notebooks/unsupervised_learning/.ipynb_checkpoints
+notebooks/semi-supervised_learning/.ipynb_checkpoints
+notebooks/examination/.ipynb_checkpoints
