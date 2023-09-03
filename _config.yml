@@ -16,17 +16,6 @@ repository:
   url: https://github.com/luma-lapinamk/jyri-mla23
   branch: main
 
-# Sphinx-settings
-# ----------------
-sphinx:
-  recursive_update: true
-  config:
-    nb_ipywidgets_js:
-        # Load IPywidgets bundle for embedding. (html-manager version is 1.0.8 for ipywidgets 8.1.0)
-        "https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@1.0.8/dist/embed-amd.js":
-            "data-jupyter-widgets-cdn": "https://cdn.jsdelivr.net/npm/"
-            "crossorigin": "anonymous"
-
 # HTML-settings and launch buttons
 # ---------------------------------
 html:
