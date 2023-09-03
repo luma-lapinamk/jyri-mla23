@@ -1,0 +1,23 @@
+name: mla23dev
+channels:
+  - defaults
+  - conda-forge
+dependencies:
+  - python=3.9
+  - sphinx
+  - jupyter-book
+  - pip
+  - pip:
+    - pyyaml
+    - numpy
+    - scipy
+    - pandas
+    - matplotlib
+    - scikit-learn
+    - scikit-optimize
+    - jax
+    - jaxlib
+    - ghp-import
+    - seaborn
+    - ipywidget==8.1.0
+

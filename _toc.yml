@@ -1,0 +1,36 @@
+# Table of contents
+# ------------------
+format: jb-book
+root: notebooks/introduction/book_intro
+parts: 
+  - caption: Introduction
+    chapters:
+    - file: notebooks/introduction/topic_intro
+    - file: notebooks/introduction/exercises
+  - caption: Supervised learning
+    chapters:
+    - file: notebooks/supervised_learning/introduction
+    - file: notebooks/supervised_learning/classification_and_regression_with_k-nearest_neighbors
+    - file: notebooks/supervised_learning/classification_and_regression_with_neural_networks
+    - file: notebooks/supervised_learning/exercises
+  - caption: Unsupervised learning
+    chapters:
+    - file: notebooks/unsupervised_learning/introduction
+    - file: notebooks/unsupervised_learning/clustering_with_k-means
+    - file: notebooks/unsupervised_learning/dimensionality_reduction_with_pca
+    - file: notebooks/unsupervised_learning/exercises
+  - caption: Semi-supervised learning
+    chapters:
+    - file: notebooks/semi-supervised_learning/introduction
+    - file: notebooks/semi-supervised_learning/classification_with_pseudo_label
+    - file: notebooks/semi-supervised_learning/exercises
+  - caption: Examination
+    chapters:
+    - file: notebooks/examination/mock_examination
+  - caption: Appendix
+    chapters:
+    - file: notebooks/appendix/learning_environment
+    - file: notebooks/appendix/probability_statistics_and_optimization
+    - file: notebooks/appendix/neural_networks
+    - file: notebooks/appendix/practical_methodology
+

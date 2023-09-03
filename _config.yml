@@ -1,0 +1,38 @@
+# Book settings
+# -------------
+title: "Machine Learning Algorithms"
+logo: "images/logo.png"
+author: <a href="https://luma-lapinamk.pub">LUMA-team</a> (<a href="mailto:luma@lapinamk.fi">luma@lapinamk.fi</a>), <a href="https://www.lapinamk.fi/en">Lapland UAS</a> / Jyri Kivinen (<a href="mailto:jyri.kivinen@lapinamk.fi">jyri.kivinen@lapinamk.fi</a>)
+copyright: "2023"
+
+# Execution settings
+# -------------------
+execute:
+  execute_notebooks: off
+
+# GitHub-settings
+# ----------------
+repository:
+  url: https://github.com/luma-lapinamk/jyri-mla23
+  branch: main
+
+# Sphinx-settings
+# ----------------
+sphinx:
+  recursive_update: true
+  config:
+    nb_ipywidgets_js:
+        # Load IPywidgets bundle for embedding. (html-manager version is 1.0.8 for ipywidgets 8.1.0)
+        "https://cdn.jsdelivr.net/npm/@jupyter-widgets/html-manager@1.0.8/dist/embed-amd.js":
+            "data-jupyter-widgets-cdn": "https://cdn.jsdelivr.net/npm/"
+            "crossorigin": "anonymous"
+
+# HTML-settings and launch buttons
+# ---------------------------------
+html:
+  use_issues_button: false
+  use_repository_button: true
+launch_buttons:
+  thebe: true
+  colab_url: "https://colab.research.google.com"
+  binderhub_url: "https://mybinder.org"
