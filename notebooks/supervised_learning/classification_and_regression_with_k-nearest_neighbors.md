@@ -16,16 +16,23 @@ kernelspec:
 :tags: [hide-input, thebe-init]
 import numpy as np
 import matplotlib.pyplot as plt
-
-!git clone https://github.com/luma-lapinamk/jyri-mla23.git
+import os 
+os.system("""
+git clone https://github.com/luma-lapinamk/jyri-mla23.git
+""")
 import sys
 sys.path.insert(0, 'jyri-mla23/code')
 from nearest_neighbors import *
 ```
 
 ```{code-cell} ipython3
+# get code 
+```
+
+```{code-cell} ipython3
 # enter code here
 ```
+
 
 `````{tab-set}
 ````{tab-item} Toy classification example
