@@ -65,14 +65,14 @@ class NearestNeighborRegressor:
 
     def predict(self, x, y, x_new, n_neighbors, distance_weighting):
         n_new = x_new.shape[0]
-        predicted_values = np.empty((n_new, ), dtype=int)
+        predicted_values = np.empty((n_new, ), dtype=float)
         for ii in np.arange(n_new):
             pairwise_distances = self.calculate_pairwise_datapoint_distances(x_new[ii, :], x)
             neighbor_indices = self.calculate_neighbor_indices(pairwise_distances, n_neighbors)
             predicted_values[ii] = self.calculate_predicted_value(neighbor_indices, y,
                                                                   pairwise_distances,
                                                                   distance_weighting)
-        return predicted_classes
+        return predicted_values
 
     def score(self, x, y, x_new, y_new, n_neighbors, distance_weighting):
         y_new_predicted = self.predict(x, y, x_new, n_neighbors, distance_weighting)
