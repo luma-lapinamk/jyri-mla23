@@ -9,12 +9,6 @@ class NearestNeighborClassifier:
 
     @staticmethod
     def calculate_pairwise_datapoint_distances(x_a, x_b):
-        """
-        Pairwise (Euclidean) distances from x_a data point to the datapoin(s) in x_b.
-        :param x_a: coordinate values for the data point x_a
-        :param x_b: coordinate values for the data point(s) x_b [shape: n_examples x n_features]
-        :return: the pairwise (Euclidean) distances
-        """
         return np.sqrt(np.sum((x_b-np.reshape(x_a, (1, x_b.shape[1])))**2, axis=1))
 
     @staticmethod
