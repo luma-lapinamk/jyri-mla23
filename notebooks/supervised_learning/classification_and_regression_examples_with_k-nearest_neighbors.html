@@ -473,7 +473,6 @@ document.write(`
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">StratifiedKFold</span>
 <span class="kn">import</span> <span class="nn">sys</span>
-<span class="kn">import</span> <span class="nn">os</span>
 </pre></div>
 </div>
 </div>
@@ -488,13 +487,21 @@ document.write(`
 <span class="k">except</span><span class="p">:</span>
     <span class="n">colab_environment</span> <span class="o">=</span> <span class="kc">False</span>
 <span class="k">if</span> <span class="n">colab_environment</span><span class="p">:</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;git clone https://github.com/luma-lapinamk/jyri-mla23.git&quot;&quot;&quot;</span><span class="p">)</span>
+    <span class="o">!</span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/luma-lapinamk/jyri-mla23.git
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;jyri-mla23/code&#39;</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;pygmentize jyri-mla23/code/nearest_neighbors.py&quot;&quot;&quot;</span><span class="p">)</span> 
 <span class="k">else</span><span class="p">:</span>
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../code&#39;</span><span class="p">)</span>
-    <span class="n">os</span><span class="o">.</span><span class="n">system</span><span class="p">(</span><span class="s2">&quot;&quot;&quot;pygmentize ../../code/nearest_neighbors.py&quot;&quot;&quot;</span><span class="p">)</span> 
 <span class="kn">from</span> <span class="nn">nearest_neighbors</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">colab_environment</span><span class="p">:</span>
+    <span class="o">!</span>pygmentize<span class="w"> </span>jyri-mla23/code/nearest_neighbors.py
+<span class="k">else</span><span class="p">:</span>
+    <span class="o">!</span>pygmentize<span class="w"> </span>../../code/nearest_neighbors.py
 </pre></div>
 </div>
 </div>
