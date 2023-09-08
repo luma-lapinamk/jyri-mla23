@@ -10,7 +10,8 @@ parts:
   - caption: Supervised learning
     chapters:
     - file: notebooks/supervised_learning/introduction
-    - file: notebooks/supervised_learning/classification_and_regression_with_k-nearest_neighbors
+    - file: notebooks/supervised_learning/classification_and_regression_with_k-nearest_neighbors.md
+    - file: notebooks/supervised_learning/classification_and_regression_examples_with_k-nearest_neighbors.ipynb
     - file: notebooks/supervised_learning/classification_and_regression_with_neural_networks
     - file: notebooks/supervised_learning/exercises
   - caption: Unsupervised learning

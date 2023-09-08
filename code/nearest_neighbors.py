@@ -1,6 +1,5 @@
 import numpy as np
-from sklearn.metrics import classification_report
-from sklearn.metrics import r2_score
+from sklearn.metrics import classification_report, r2_score
 
 
 class NearestNeighborClassifier:
@@ -8,8 +7,8 @@ class NearestNeighborClassifier:
     A basic k-NN classifier
     """
 
-    def __init__(self):
-        self.name = 'nearest_neighbor_classifier'
+    def __init__(self, name='nearest_neighbor_classifier'):
+        self.name = name
 
     @staticmethod
     def calculate_pairwise_datapoint_distances(x_a, x_b):
@@ -43,8 +42,8 @@ class NearestNeighborRegressor:
     A basic k-NN regressor
     """
 
-    def __init__(self):
-        self.name = 'nearest_neighbor_regressor'
+    def __init__(self, name='nearest_neighbor_regressor'):
+        self.name = name
 
     @staticmethod
     def calculate_pairwise_datapoint_distances(x_a, x_b):
