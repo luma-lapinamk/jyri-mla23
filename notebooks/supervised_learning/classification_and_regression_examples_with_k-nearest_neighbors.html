@@ -473,6 +473,7 @@ document.write(`
 <span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
 <span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">StratifiedKFold</span>
 <span class="kn">import</span> <span class="nn">sys</span>
+<span class="kn">import</span> <span class="nn">os.path</span>
 </pre></div>
 </div>
 </div>
@@ -481,12 +482,7 @@ document.write(`
 <h2>Nearest neighbor code<a class="headerlink" href="#nearest-neighbor-code" title="Permalink to this heading">#</a></h2>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">try</span><span class="p">:</span> 
-    <span class="kn">import</span> <span class="nn">google.colab</span>
-    <span class="n">colab_environment</span> <span class="o">=</span> <span class="kc">True</span>
-<span class="k">except</span><span class="p">:</span>
-    <span class="n">colab_environment</span> <span class="o">=</span> <span class="kc">False</span>
-<span class="k">if</span> <span class="n">colab_environment</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;../../code/nearest_neighbors.py&#39;</span><span class="p">):</span>
     <span class="o">!</span>git<span class="w"> </span>clone<span class="w"> </span>https://github.com/luma-lapinamk/jyri-mla23.git
     <span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;jyri-mla23/code&#39;</span><span class="p">)</span>
 <span class="k">else</span><span class="p">:</span>
@@ -498,7 +494,7 @@ document.write(`
 </div>
 <div class="cell docutils container">
 <div class="cell_input docutils container">
-<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="n">colab_environment</span><span class="p">:</span>
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">if</span> <span class="ow">not</span> <span class="n">os</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">isfile</span><span class="p">(</span><span class="s1">&#39;../../code/nearest_neighbors.py&#39;</span><span class="p">):</span>
     <span class="o">!</span>pygmentize<span class="w"> </span>jyri-mla23/code/nearest_neighbors.py
 <span class="k">else</span><span class="p">:</span>
     <span class="o">!</span>pygmentize<span class="w"> </span>../../code/nearest_neighbors.py
