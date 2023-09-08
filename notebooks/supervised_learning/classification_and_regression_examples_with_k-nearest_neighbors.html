@@ -1,0 +1,1007 @@
+
+
+<!DOCTYPE html>
+
+
+<html lang="en" >
+
+  <head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" /><meta name="generator" content="Docutils 0.18.1: http://docutils.sourceforge.net/" />
+
+    <title>Example kNN regression and classification &#8212; Machine Learning Algorithms</title>
+  
+  
+  
+  <script data-cfasync="false">
+    document.documentElement.dataset.mode = localStorage.getItem("mode") || "";
+    document.documentElement.dataset.theme = localStorage.getItem("theme") || "light";
+  </script>
+  
+  <!-- Loaded before other Sphinx assets -->
+  <link href="../../_static/styles/theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/bootstrap.css?digest=e353d410970836974a52" rel="stylesheet" />
+<link href="../../_static/styles/pydata-sphinx-theme.css?digest=e353d410970836974a52" rel="stylesheet" />
+
+  
+  <link href="../../_static/vendor/fontawesome/6.1.2/css/all.min.css?digest=e353d410970836974a52" rel="stylesheet" />
+  <link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-solid-900.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-brands-400.woff2" />
+<link rel="preload" as="font" type="font/woff2" crossorigin href="../../_static/vendor/fontawesome/6.1.2/webfonts/fa-regular-400.woff2" />
+
+    <link rel="stylesheet" type="text/css" href="../../_static/pygments.css" />
+    <link rel="stylesheet" href="../../_static/styles/sphinx-book-theme.css?digest=14f4ca6b54d191a8c7657f6c759bf11a5fb86285" type="text/css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/togglebutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/copybutton.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/mystnb.4510f1fc1dee50b3e5859aac5469c37c29e427902b24a333a5f9fcb2f0b3ac41.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/sphinx-thebe.css" />
+    <link rel="stylesheet" type="text/css" href="../../_static/design-style.4045f2051d55cab465a707391d5b2007.min.css" />
+  
+  <!-- Pre-loaded scripts that we'll load fully later -->
+  <link rel="preload" as="script" href="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52" />
+<link rel="preload" as="script" href="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52" />
+
+    <script data-url_root="../../" id="documentation_options" src="../../_static/documentation_options.js"></script>
+    <script src="../../_static/jquery.js"></script>
+    <script src="../../_static/underscore.js"></script>
+    <script src="../../_static/_sphinx_javascript_frameworks_compat.js"></script>
+    <script src="../../_static/doctools.js"></script>
+    <script src="../../_static/clipboard.min.js"></script>
+    <script src="../../_static/copybutton.js"></script>
+    <script src="../../_static/scripts/sphinx-book-theme.js?digest=5a5c038af52cf7bc1a1ec88eea08e6366ee68824"></script>
+    <script>let toggleHintShow = 'Click to show';</script>
+    <script>let toggleHintHide = 'Click to hide';</script>
+    <script>let toggleOpenOnPrint = 'true';</script>
+    <script src="../../_static/togglebutton.js"></script>
+    <script>var togglebuttonSelector = '.toggle, .admonition.dropdown';</script>
+    <script src="../../_static/design-tabs.js"></script>
+    <script>const THEBE_JS_URL = "https://unpkg.com/thebe@0.8.2/lib/index.js"
+const thebe_selector = ".thebe,.cell"
+const thebe_selector_input = "pre"
+const thebe_selector_output = ".output, .cell_output"
+</script>
+    <script async="async" src="../../_static/sphinx-thebe.js"></script>
+    <script>DOCUMENTATION_OPTIONS.pagename = 'notebooks/supervised_learning/classification_and_regression_examples_with_k-nearest_neighbors';</script>
+    <link rel="index" title="Index" href="../../genindex.html" />
+    <link rel="search" title="Search" href="../../search.html" />
+    <link rel="next" title="Classification and regression with neural networks" href="classification_and_regression_with_neural_networks.html" />
+    <link rel="prev" title="Classification and regression with k-nearest neighbors" href="classification_and_regression_with_k-nearest_neighbors.html" />
+  <meta name="viewport" content="width=device-width, initial-scale=1"/>
+  <meta name="docsearch:language" content="en"/>
+  </head>
+  
+  
+  <body data-bs-spy="scroll" data-bs-target=".bd-toc-nav" data-offset="180" data-bs-root-margin="0px 0px -60%" data-default-mode="">
+
+  
+  
+  <a class="skip-link" href="#main-content">Skip to main content</a>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__primary"
+          id="__primary"/>
+  <label class="overlay overlay-primary" for="__primary"></label>
+  
+  <input type="checkbox"
+          class="sidebar-toggle"
+          name="__secondary"
+          id="__secondary"/>
+  <label class="overlay overlay-secondary" for="__secondary"></label>
+  
+  <div class="search-button__wrapper">
+    <div class="search-button__overlay"></div>
+    <div class="search-button__search-container">
+<form class="bd-search d-flex align-items-center"
+      action="../../search.html"
+      method="get">
+  <i class="fa-solid fa-magnifying-glass"></i>
+  <input type="search"
+         class="form-control"
+         name="q"
+         id="search-input"
+         placeholder="Search this book..."
+         aria-label="Search this book..."
+         autocomplete="off"
+         autocorrect="off"
+         autocapitalize="off"
+         spellcheck="false"/>
+  <span class="search-button__kbd-shortcut"><kbd class="kbd-shortcut__modifier">Ctrl</kbd>+<kbd>K</kbd></span>
+</form></div>
+  </div>
+  
+    <nav class="bd-header navbar navbar-expand-lg bd-navbar">
+    </nav>
+  
+  <div class="bd-container">
+    <div class="bd-container__inner bd-page-width">
+      
+      <div class="bd-sidebar-primary bd-sidebar">
+        
+
+  
+  <div class="sidebar-header-items sidebar-primary__section">
+    
+    
+    
+    
+  </div>
+  
+    <div class="sidebar-primary-items__start sidebar-primary__section">
+        <div class="sidebar-primary-item">
+  
+
+<a class="navbar-brand logo" href="../introduction/book_intro.html">
+  
+  
+  
+  
+    
+    
+      
+    
+    
+    <img src="../../_static/logo.png" class="logo__image only-light" alt="Logo image"/>
+    <script>document.write(`<img src="../../_static/logo.png" class="logo__image only-dark" alt="Logo image"/>`);</script>
+  
+  
+</a></div>
+        <div class="sidebar-primary-item"><nav class="bd-links" id="bd-docs-nav" aria-label="Main">
+    <div class="bd-toc-item navbar-nav active">
+        
+        <ul class="nav bd-sidenav bd-sidenav__home-link">
+            <li class="toctree-l1">
+                <a class="reference internal" href="../introduction/book_intro.html">
+                    Machine learning algorithms
+                </a>
+            </li>
+        </ul>
+        <p aria-level="2" class="caption" role="heading"><span class="caption-text">Introduction</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../introduction/topic_intro.html">Overview</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../introduction/exercises.html">Exercises</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Supervised learning</span></p>
+<ul class="current nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="classification_and_regression_with_k-nearest_neighbors.html">Classification and regression with k-nearest neighbors</a></li>
+<li class="toctree-l1 current active"><a class="current reference internal" href="#">Example kNN regression and classification</a></li>
+
+
+
+<li class="toctree-l1"><a class="reference internal" href="classification_and_regression_with_neural_networks.html">Classification and regression with neural networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="exercises.html">Exercises</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Unsupervised learning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../unsupervised_learning/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unsupervised_learning/clustering_with_k-means.html">Clustering with k-means</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unsupervised_learning/dimensionality_reduction_with_pca.html">Dimensionality reduction with principal components analysis</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../unsupervised_learning/exercises.html">Exercises</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Semi-supervised learning</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../semi-supervised_learning/introduction.html">Introduction</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../semi-supervised_learning/classification_with_pseudo_label.html">Classification with Pseudo-Label</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../semi-supervised_learning/exercises.html">Exercises</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Examination</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../examination/mock_examination.html">Mock examination</a></li>
+</ul>
+<p aria-level="2" class="caption" role="heading"><span class="caption-text">Appendix</span></p>
+<ul class="nav bd-sidenav">
+<li class="toctree-l1"><a class="reference internal" href="../appendix/learning_environment.html">Learning environment</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/probability_statistics_and_optimization.html">Probability, statistics, and optimization</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/neural_networks.html">Neural networks</a></li>
+<li class="toctree-l1"><a class="reference internal" href="../appendix/practical_methodology.html">Practical methodology</a></li>
+</ul>
+
+    </div>
+</nav></div>
+    </div>
+  
+  
+  <div class="sidebar-primary-items__end sidebar-primary__section">
+  </div>
+  
+  <div id="rtd-footer-container"></div>
+
+
+      </div>
+      
+      <main id="main-content" class="bd-main">
+        
+        
+
+<div class="sbt-scroll-pixel-helper"></div>
+
+          <div class="bd-content">
+            <div class="bd-article-container">
+              
+              <div class="bd-header-article">
+<div class="header-article-items header-article__inner">
+  
+    <div class="header-article-items__start">
+      
+        <div class="header-article-item"><label class="sidebar-toggle primary-toggle btn btn-sm" for="__primary" title="Toggle primary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+  <span class="fa-solid fa-bars"></span>
+</label></div>
+      
+    </div>
+  
+  
+    <div class="header-article-items__end">
+      
+        <div class="header-article-item">
+
+<div class="article-header-buttons">
+
+
+
+
+
+<div class="dropdown dropdown-launch-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Launch interactive content">
+    <i class="fas fa-rocket"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="https://mybinder.org/v2/gh/luma-lapinamk/jyri-mla23/main?urlpath=tree/notebooks/supervised_learning/classification_and_regression_examples_with_k-nearest_neighbors.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onBinder"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_binder.svg">
+  </span>
+<span class="btn__text-container">Binder</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li><a href="https://colab.research.google.com/github/luma-lapinamk/jyri-mla23/blob/main/notebooks/supervised_learning/classification_and_regression_examples_with_k-nearest_neighbors.ipynb" target="_blank"
+   class="btn btn-sm dropdown-item"
+   title="Launch onColab"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  
+    <img src="../../_static/images/logo_colab.png">
+  </span>
+<span class="btn__text-container">Colab</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="initThebeSBT()"
+  class="btn btn-sm btn-launch-thebe dropdown-item"
+  title="Launch Thebe"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-play"></i>
+  </span>
+<span class="btn__text-container">Live Code</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+<a href="https://github.com/luma-lapinamk/jyri-mla23" target="_blank"
+   class="btn btn-sm btn-source-repository-button"
+   title="Source repository"
+   data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fab fa-github"></i>
+  </span>
+
+</a>
+
+
+
+
+
+
+<div class="dropdown dropdown-download-buttons">
+  <button class="btn dropdown-toggle" type="button" data-bs-toggle="dropdown" aria-expanded="false" aria-label="Download this page">
+    <i class="fas fa-download"></i>
+  </button>
+  <ul class="dropdown-menu">
+      
+      
+      
+      <li><a href="../../_sources/notebooks/supervised_learning/classification_and_regression_examples_with_k-nearest_neighbors.ipynb" target="_blank"
+   class="btn btn-sm btn-download-source-button dropdown-item"
+   title="Download source file"
+   data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file"></i>
+  </span>
+<span class="btn__text-container">.ipynb</span>
+</a>
+</li>
+      
+      
+      
+      
+      <li>
+<button onclick="window.print()"
+  class="btn btn-sm btn-download-pdf-button dropdown-item"
+  title="Print to PDF"
+  data-bs-placement="left" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-file-pdf"></i>
+  </span>
+<span class="btn__text-container">.pdf</span>
+</button>
+</li>
+      
+  </ul>
+</div>
+
+
+
+
+<button onclick="toggleFullScreen()"
+  class="btn btn-sm btn-fullscreen-button"
+  title="Fullscreen mode"
+  data-bs-placement="bottom" data-bs-toggle="tooltip"
+>
+  
+
+<span class="btn__icon-container">
+  <i class="fas fa-expand"></i>
+  </span>
+
+</button>
+
+
+<script>
+document.write(`
+  <button class="theme-switch-button btn btn-sm btn-outline-primary navbar-btn rounded-circle" title="light/dark" aria-label="light/dark" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="theme-switch" data-mode="light"><i class="fa-solid fa-sun"></i></span>
+    <span class="theme-switch" data-mode="dark"><i class="fa-solid fa-moon"></i></span>
+    <span class="theme-switch" data-mode="auto"><i class="fa-solid fa-circle-half-stroke"></i></span>
+  </button>
+`);
+</script>
+
+<script>
+document.write(`
+  <button class="btn btn-sm navbar-btn search-button search-button__button" title="Search" aria-label="Search" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <i class="fa-solid fa-magnifying-glass"></i>
+  </button>
+`);
+</script>
+<label class="sidebar-toggle secondary-toggle btn btn-sm" for="__secondary"title="Toggle secondary sidebar" data-bs-placement="bottom" data-bs-toggle="tooltip">
+    <span class="fa-solid fa-list"></span>
+</label>
+</div></div>
+      
+    </div>
+  
+</div>
+</div>
+              
+              
+
+<div id="jb-print-docs-body" class="onlyprint">
+    <h1>Example kNN regression and classification</h1>
+    <!-- Table of contents -->
+    <div id="print-main-content">
+        <div id="jb-print-toc">
+            
+            <div>
+                <h2> Contents </h2>
+            </div>
+            <nav aria-label="Page">
+                <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Example kNN regression and classification</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#code-imports">Code imports</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#a-basic-regression-example">A basic regression example</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nearest-neighbor-code">Nearest neighbor code</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-a-value-for-k">Selecting a value for k</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-creating-a-new-class-that-extends-the-base-class-with-fitting-of-k">Coding: creating a new class that extends the base class with fitting of k</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experimentation-with-the-new-code">Experimentation with the new code</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#classification">Classification</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-creating-a-new-class-that-extends-the-base-class-with-fitting-of-k-similar-to-as-done-in-the-regression-above">Coding: creating a new class that extends the base class with fitting of k (similar to as done in the regression above)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experiments">Experiments</a></li>
+</ul>
+</li>
+</ul>
+
+            </nav>
+        </div>
+    </div>
+</div>
+
+              
+                
+<div id="searchbox"></div>
+                <article class="bd-article" role="main">
+                  
+  <section class="tex2jax_ignore mathjax_ignore" id="example-knn-regression-and-classification">
+<h1>Example kNN regression and classification<a class="headerlink" href="#example-knn-regression-and-classification" title="Permalink to this heading">#</a></h1>
+<p><strong>Author</strong>: Jyri Kivinen (<a class="reference external" href="mailto:jyri&#46;kivinen&#37;&#52;&#48;lapinamk&#46;fi">jyri<span>&#46;</span>kivinen<span>&#64;</span>lapinamk<span>&#46;</span>fi</a>)</p>
+<p><strong>Version</strong>: 8 September, 2023</p>
+<p><strong>Credits</strong>: The notebook uses some features of, draws inspiration from, the code presented in <a class="reference external" href="https://scikit-learn.org/stable/auto_examples/neighbors/plot_regression.html">https://scikit-learn.org/stable/auto_examples/neighbors/plot_regression.html</a> (page generated 8 September, 2023) and having the code stated licence:</p>
+<div class="highlight-default notranslate"><div class="highlight"><pre><span></span>    <span class="c1"># Author: Alexandre Gramfort &lt;alexandre.gramfort@inria.fr&gt;</span>
+    <span class="c1">#         Fabian Pedregosa &lt;fabian.pedregosa@inria.fr&gt;`</span>
+    <span class="c1">#</span>
+    <span class="c1"># License: BSD 3 clause (C) INRIA</span>
+</pre></div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="code-imports">
+<h1>Code imports<a class="headerlink" href="#code-imports" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="kn">import</span> <span class="nn">numpy</span> <span class="k">as</span> <span class="nn">np</span>
+<span class="kn">import</span> <span class="nn">matplotlib.pyplot</span> <span class="k">as</span> <span class="nn">plt</span>
+<span class="kn">from</span> <span class="nn">sklearn.model_selection</span> <span class="kn">import</span> <span class="n">KFold</span><span class="p">,</span> <span class="n">StratifiedKFold</span>
+<span class="kn">import</span> <span class="nn">sys</span>
+<span class="n">sys</span><span class="o">.</span><span class="n">path</span><span class="o">.</span><span class="n">insert</span><span class="p">(</span><span class="mi">0</span><span class="p">,</span> <span class="s1">&#39;../../code&#39;</span><span class="p">)</span>
+<span class="kn">from</span> <span class="nn">nearest_neighbors</span> <span class="kn">import</span> <span class="o">*</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="a-basic-regression-example">
+<h1>A basic regression example<a class="headerlink" href="#a-basic-regression-example" title="Permalink to this heading">#</a></h1>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># helper functions for creating clean and noisy observations</span>
+<span class="k">def</span> <span class="nf">create_noiseless_process_output</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">process_name</span><span class="o">=</span><span class="s1">&#39;cosine&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">process_name</span> <span class="o">==</span> <span class="s1">&#39;cosine&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">cos</span><span class="p">(</span><span class="n">x</span><span class="p">)</span>
+    <span class="k">elif</span> <span class="n">process_name</span> <span class="o">==</span> <span class="s1">&#39;logistic_sigmoid&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="mf">1.</span><span class="o">/</span><span class="p">(</span><span class="mi">1</span><span class="o">+</span><span class="n">np</span><span class="o">.</span><span class="n">exp</span><span class="p">(</span><span class="o">-</span><span class="n">x</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">add_noise</span><span class="p">(</span><span class="n">y</span><span class="p">,</span> <span class="n">noise_level</span><span class="p">,</span> <span class="n">process_name</span><span class="o">=</span><span class="s1">&#39;uniform&#39;</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">process_name</span> <span class="o">==</span> <span class="s1">&#39;uniform&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">y</span><span class="o">+</span><span class="n">noise_level</span><span class="o">*</span><span class="p">(</span><span class="mf">0.5</span><span class="o">-</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+    <span class="k">elif</span> <span class="n">process_name</span> <span class="o">==</span> <span class="s1">&#39;gaussian&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">y</span><span class="o">+</span><span class="n">noise_level</span><span class="o">*</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">randn</span><span class="p">(</span><span class="n">y</span><span class="o">.</span><span class="n">size</span><span class="p">))</span>
+
+<span class="k">def</span> <span class="nf">create_process_output</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noise_level</span><span class="p">,</span> <span class="n">noiseless_process_name</span><span class="o">=</span><span class="s1">&#39;cosine&#39;</span><span class="p">,</span> <span class="n">noise_process_name</span><span class="o">=</span><span class="s1">&#39;uniform&#39;</span><span class="p">):</span>
+    <span class="n">y_noiseless</span> <span class="o">=</span> <span class="n">create_noiseless_process_output</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">noiseless_process_name</span><span class="p">)</span>
+    <span class="n">y_noisy</span> <span class="o">=</span> <span class="n">add_noise</span><span class="p">(</span><span class="n">y_noiseless</span><span class="p">,</span> <span class="n">noise_level</span><span class="p">,</span> <span class="n">noise_process_name</span><span class="p">)</span>
+    <span class="k">return</span> <span class="n">y_noiseless</span><span class="p">,</span> <span class="n">y_noisy</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># speficications </span>
+<span class="n">n_trainval_datapoints</span> <span class="o">=</span> <span class="mi">100</span>
+<span class="n">n_test_datapoints</span> <span class="o">=</span> <span class="mi">500</span>
+<span class="n">noise_level</span> <span class="o">=</span> <span class="mf">0.5</span>
+<span class="n">x_min</span> <span class="o">=</span> <span class="o">-</span><span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="n">x_max</span> <span class="o">=</span> <span class="mi">2</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">pi</span>
+<span class="n">clean_data_process</span> <span class="o">=</span> <span class="s1">&#39;cosine&#39;</span>
+<span class="n">noise_process</span> <span class="o">=</span> <span class="s1">&#39;uniform&#39;</span>
+<span class="n">random_number_generator_seed</span> <span class="o">=</span> <span class="mi">42</span> 
+
+<span class="c1"># set random number generator seed</span>
+<span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">seed</span><span class="p">(</span><span class="n">random_number_generator_seed</span><span class="p">)</span>
+
+<span class="c1"># create feature values  </span>
+<span class="n">X</span> <span class="o">=</span> <span class="n">x_min</span><span class="o">+</span><span class="p">(</span><span class="n">x_max</span><span class="o">-</span><span class="n">x_min</span><span class="p">)</span><span class="o">*</span><span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">rand</span><span class="p">(</span><span class="n">n_trainval_datapoints</span><span class="o">+</span><span class="n">n_test_datapoints</span><span class="p">,</span> <span class="mi">1</span><span class="p">)</span>
+<span class="n">random_indices</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">random</span><span class="o">.</span><span class="n">permutation</span><span class="p">(</span><span class="n">n_trainval_datapoints</span><span class="o">+</span><span class="n">n_test_datapoints</span><span class="p">)</span>
+<span class="n">X_trainval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">random_indices</span><span class="p">[</span><span class="mi">0</span><span class="p">:</span> <span class="n">n_trainval_datapoints</span><span class="p">],</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">sort</span><span class="p">(</span><span class="n">X</span><span class="p">[</span><span class="n">random_indices</span><span class="p">[</span><span class="n">n_trainval_datapoints</span><span class="p">:],</span> <span class="p">:]</span><span class="o">.</span><span class="n">copy</span><span class="p">(),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">0</span><span class="p">)</span>
+
+<span class="c1"># create clean and noisy observations from the feature values</span>
+<span class="n">y_trainval_noiseless</span><span class="p">,</span> <span class="n">y_trainval</span> <span class="o">=</span> <span class="n">create_process_output</span><span class="p">(</span><span class="n">X_trainval</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">noise_level</span><span class="p">,</span> <span class="n">clean_data_process</span><span class="p">,</span> <span class="n">noise_process</span><span class="p">)</span>
+<span class="n">y_test_noiseless</span><span class="p">,</span> <span class="n">y_test</span> <span class="o">=</span> <span class="n">create_process_output</span><span class="p">(</span><span class="n">X_test</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">noise_level</span><span class="p">,</span> <span class="n">clean_data_process</span><span class="p">,</span> <span class="n">noise_process</span><span class="p">)</span>
+
+<span class="c1"># plot data </span>
+<span class="n">fig</span><span class="p">,</span> <span class="n">ax</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">8</span><span class="p">])</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">create_noiseless_process_output</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">clean_data_process</span><span class="p">),</span> 
+        <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Noiseless process&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_trainval</span><span class="p">,</span> <span class="n">y_trainval</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Noisy observations (trainval datapoints)&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/70fd72811c7ab7a9256691625daba00fe48ca49330678dae46945a1d93e1d7a6.png" src="../../_images/70fd72811c7ab7a9256691625daba00fe48ca49330678dae46945a1d93e1d7a6.png" />
+</div>
+</div>
+<section id="nearest-neighbor-code">
+<h2>Nearest neighbor code<a class="headerlink" href="#nearest-neighbor-code" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="o">!</span>pygmentize<span class="w"> </span>../../code/nearest_neighbors.py<span class="w"> </span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<div class="output stream highlight-myst-ansi notranslate"><div class="highlight"><pre><span></span><span class=" -Color -Color-Blue">import</span> <span class=" -Color -Color-Cyan">numpy</span> <span class=" -Color -Color-Blue">as</span> <span class=" -Color -Color-Cyan">np</span>
+<span class=" -Color -Color-Blue">from</span> <span class=" -Color -Color-Cyan">sklearn.metrics</span> <span class=" -Color -Color-Blue">import</span> classification_report, r2_score
+
+
+<span class=" -Color -Color-Blue">class</span> <span class=" -Color -Color-Green">NearestNeighborClassifier</span>:
+<span class=" -Color -Color-White">    </span><span class=" -Color -Color-Yellow">&quot;&quot;&quot;</span>
+<span class=" -Color -Color-Yellow">    A basic k-NN classifier</span>
+<span class=" -Color -Color-Yellow">    &quot;&quot;&quot;</span>
+
+    <span class=" -Color -Color-Blue">def</span> <span class=" -Color -Color-Green">__init__</span>(<span class=" -Color -Color-Cyan">self</span>, name=<span class=" -Color -Color-Yellow">&#39;nearest_neighbor_classifier&#39;</span>):
+        <span class=" -Color -Color-Cyan">self</span>.name = name
+
+    @staticmethod
+    <span class=" -Color -Color-Blue">def</span> <span class=" -Color -Color-Green">calculate_pairwise_datapoint_distances</span>(x_a, x_b):
+        <span class=" -Color -Color-Blue">return</span> np.sqrt(np.sum((x_b-np.reshape(x_a, (<span class=" -Color -Color-Blue">1</span>, x_b.shape[<span class=" -Color -Color-Blue">1</span>])))**<span class=" -Color -Color-Blue">2</span>, axis=<span class=" -Color -Color-Blue">1</span>))
+
+    @staticmethod
+    <span class=" -Color -Color-Blue">def</span> <span class=" -Color -Color-Green">calculate_neighbor_indices</span>(pairwise_distances, n_neighbors):
+        <span class=" -Color -Color-Blue">return</span> np.argsort(pairwise_distances)[<span class=" -Color -Color-Blue">0</span>: n_neighbors]
+
+    @staticmethod
+    <span class=" -Color -Color-Blue">def</span> <span class=" -Color -Color-Green">calculate_predicted_class</span>(neighbor_indices, y):
+        classes, class_counts = np.unique(y[neighbor_indices], return_counts=<span class=" -Color -Color-Blue">True</span>)
+        <span class=" -Color -Color-Blue">return</span> classes[np.argmax(class_counts)]
+
+    <span class=" -Color -Color-Blue">def</span> <span class=" -Color -Color-Green">predict</span>(<span class=" -Color -Color-Cyan">self</span>, x, y, x_new, n_neighbors):
+        n_new = x_new.shape[<span class=" -Color -Color-Blue">0</span>]
+        predicted_classes = np.empty((n_new, ), dtype=<span class=" -Color -Color-Cyan">int</span>)
+        <span class=" -Color -Color-Blue">for</span> ii <span class=" -Color -Color-Magenta">in</span> np.arange(n_new):
+            pairwise_distances = <span class=" -Color -Color-Cyan">self</span>.calculate_pairwise_datapoint_distances(x_new[ii, :], x)
+            neighbor_indices = <span class=" -Color -Color-Cyan">self</span>.calculate_neighbor_indices(pairwise_distances, n_neighbors)
+            predicted_classes[ii] = <span class=" -Color -Color-Cyan">self</span>.calculate_predicted_class(neighbor_indices, y)
+        <span class=" -Color -Color-Blue">return</span> predicted_classes
+
+    <span class=" -Color -Color-Blue">def</span> <span class=" -Color -Color-Green">score</span>(<span class=" -Color -Color-Cyan">self</span>, x, y, x_new, y_new, n_neighbors):
+        y_new_predicted = <span class=" -Color -Color-Cyan">self</span>.predict(x, y, x_new, n_neighbors)
+        <span class=" -Color -Color-Blue">return</span> classification_report(y_new, y_new_predicted, output_dict=<span class=" -Color -Color-Blue">True</span>)
+
+
+<span class=" -Color -Color-Blue">class</span> <span class=" -Color -Color-Green">NearestNeighborRegressor</span>:
+<span class=" -Color -Color-White">    </span><span class=" -Color -Color-Yellow">&quot;&quot;&quot;</span>
+<span class=" -Color -Color-Yellow">    A basic k-NN regressor</span>
+<span class=" -Color -Color-Yellow">    &quot;&quot;&quot;</span>
+
+    <span class=" -Color -Color-Blue">def</span> <span class=" -Color -Color-Green">__init__</span>(<span class=" -Color -Color-Cyan">self</span>, name=<span class=" -Color -Color-Yellow">&#39;nearest_neighbor_regressor&#39;</span>):
+        <span class=" -Color -Color-Cyan">self</span>.name = name
+
+    @staticmethod
+    <span class=" -Color -Color-Blue">def</span> <span class=" -Color -Color-Green">calculate_pairwise_datapoint_distances</span>(x_a, x_b):
+        <span class=" -Color -Color-Blue">return</span> np.sqrt(np.sum((x_b-np.reshape(x_a, (<span class=" -Color -Color-Blue">1</span>, x_b.shape[<span class=" -Color -Color-Blue">1</span>])))**<span class=" -Color -Color-Blue">2</span>, axis=<span class=" -Color -Color-Blue">1</span>))
+
+    @staticmethod
+    <span class=" -Color -Color-Blue">def</span> <span class=" -Color -Color-Green">calculate_neighbor_indices</span>(pairwise_distances, n_neighbors):
+        <span class=" -Color -Color-Blue">return</span> np.argsort(pairwise_distances)[<span class=" -Color -Color-Blue">0</span>: n_neighbors]
+
+    @staticmethod
+    <span class=" -Color -Color-Blue">def</span> <span class=" -Color -Color-Green">calculate_predicted_value</span>(neighbor_indices, y, pairwise_distances, distance_weighting):
+        <span class=" -Color -Color-Blue">if</span> distance_weighting:
+            neighbor_weights = <span class=" -Color -Color-Blue">1.</span>/(pairwise_distances[neighbor_indices]+np.finfo(<span class=" -Color -Color-Cyan">float</span>).eps)
+            neighbor_weights *= (<span class=" -Color -Color-Blue">1.</span>/neighbor_weights.sum())
+            <span class=" -Color -Color-Blue">return</span> np.sum(neighbor_weights*y[neighbor_indices])
+        <span class=" -Color -Color-Blue">else</span>:
+            <span class=" -Color -Color-Blue">return</span> np.mean(y[neighbor_indices])  <span class=" -Color -Color-White"># equal weights</span>
+
+    <span class=" -Color -Color-Blue">def</span> <span class=" -Color -Color-Green">predict</span>(<span class=" -Color -Color-Cyan">self</span>, x, y, x_new, n_neighbors, distance_weighting):
+        n_new = x_new.shape[<span class=" -Color -Color-Blue">0</span>]
+        predicted_values = np.empty((n_new, ), dtype=<span class=" -Color -Color-Cyan">float</span>)
+        <span class=" -Color -Color-Blue">for</span> ii <span class=" -Color -Color-Magenta">in</span> np.arange(n_new):
+            pairwise_distances = <span class=" -Color -Color-Cyan">self</span>.calculate_pairwise_datapoint_distances(x_new[ii, :], x)
+            neighbor_indices = <span class=" -Color -Color-Cyan">self</span>.calculate_neighbor_indices(pairwise_distances, n_neighbors)
+            predicted_values[ii] = <span class=" -Color -Color-Cyan">self</span>.calculate_predicted_value(neighbor_indices, y,
+                                                                  pairwise_distances,
+                                                                  distance_weighting)
+        <span class=" -Color -Color-Blue">return</span> predicted_values
+
+    <span class=" -Color -Color-Blue">def</span> <span class=" -Color -Color-Green">score</span>(<span class=" -Color -Color-Cyan">self</span>, x, y, x_new, y_new, n_neighbors, distance_weighting):
+        y_new_predicted = <span class=" -Color -Color-Cyan">self</span>.predict(x, y, x_new, n_neighbors, distance_weighting)
+        <span class=" -Color -Color-Blue">return</span> r2_score(y_new, y_new_predicted)
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="selecting-a-value-for-k">
+<h2>Selecting a value for k<a class="headerlink" href="#selecting-a-value-for-k" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># instantiate model </span>
+<span class="n">kNN</span> <span class="o">=</span> <span class="n">NearestNeighborRegressor</span><span class="p">()</span>
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># leave-one-out cross-validation to choose k</span>
+<span class="n">n_neighbors_options</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="mi">50</span><span class="p">)</span>
+<span class="n">distance_weighting</span> <span class="o">=</span> <span class="kc">True</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_neighbors_options</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+<span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">n_neighbors</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">n_neighbors_options</span><span class="p">):</span>
+    <span class="n">score</span> <span class="o">=</span> <span class="mf">0.</span>
+    <span class="k">for</span> <span class="n">jj</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">X_trainval</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+        <span class="n">train_indices</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">X_trainval</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="n">jj</span><span class="p">)</span>
+        <span class="n">val_indices</span> <span class="o">=</span> <span class="o">~</span><span class="n">train_indices</span>
+        <span class="n">val_prediction</span> <span class="o">=</span> <span class="n">kNN</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_trainval</span><span class="p">[</span><span class="n">train_indices</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y_trainval</span><span class="p">[</span><span class="n">train_indices</span><span class="p">],</span>
+                                     <span class="n">X_trainval</span><span class="p">[</span><span class="n">val_indices</span><span class="p">,</span> <span class="p">:],</span> <span class="n">n_neighbors</span><span class="p">,</span> <span class="n">distance_weighting</span><span class="p">)</span>
+        <span class="n">score</span> <span class="o">-=</span> <span class="p">(</span><span class="n">y_trainval</span><span class="p">[</span><span class="n">val_indices</span><span class="p">]</span><span class="o">-</span><span class="n">val_prediction</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>    
+    <span class="n">scores</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span><span class="o">/</span><span class="p">(</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y_test_predicted</span> <span class="o">=</span> <span class="n">kNN</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">X_trainval</span><span class="p">,</span> <span class="n">y_trainval</span><span class="p">,</span> <span class="n">X_test</span><span class="p">,</span> <span class="n">n_neighbors_options</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)],</span> <span class="n">distance_weighting</span><span class="p">)</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">])</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n_neighbors_options</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">,</span> <span class="n">fontsize</span><span class="o">=</span><span class="mi">16</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;score in fitting&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;best k: </span><span class="si">{</span><span class="n">n_neighbors_options</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)]</span><span class="si">}</span><span class="s1">, score: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">create_noiseless_process_output</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">clean_data_process</span><span class="p">),</span> 
+        <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Noiseless process&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_trainval</span><span class="p">,</span> <span class="n">y_trainval</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Noisy observations (trainval datapoints)&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test_predicted</span><span class="p">,</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">n_neighbors_options</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)]</span><span class="si">}</span><span class="s1">-NN predictions&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/7719b117e942ae6598062a186e421e7aa90f17d110cc8b23fe804dd71f76542a.png" src="../../_images/7719b117e942ae6598062a186e421e7aa90f17d110cc8b23fe804dd71f76542a.png" />
+</div>
+</div>
+</section>
+<section id="coding-creating-a-new-class-that-extends-the-base-class-with-fitting-of-k">
+<h2>Coding: creating a new class that extends the base class with fitting of k<a class="headerlink" href="#coding-creating-a-new-class-that-extends-the-base-class-with-fitting-of-k" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyNearestNeighborRegressor</span><span class="p">(</span><span class="n">NearestNeighborRegressor</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my_nearest_neighbor_regressor&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="kc">None</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_weighting</span> <span class="o">=</span> <span class="kc">None</span>
+        
+    <span class="k">def</span> <span class="nf">my_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_new</span><span class="p">,</span> <span class="n">y_new</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">x_new</span><span class="p">,</span> <span class="n">y_new</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_weighting</span><span class="p">)</span>	
+
+    <span class="k">def</span> <span class="nf">my_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_neighbors_options</span><span class="p">,</span> <span class="n">distance_weighting</span><span class="o">=</span><span class="kc">True</span><span class="p">,</span> <span class="n">n_folds_in_cv</span><span class="o">=</span><span class="kc">None</span><span class="p">):</span>
+        <span class="c1"># memorize training data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">distance_weighting</span> <span class="o">=</span> <span class="n">distance_weighting</span>
+        <span class="c1"># choose and store k </span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_neighbors_options</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_folds_in_cv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># leave-one-out </span>
+            <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">n_neighbors</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">n_neighbors_options</span><span class="p">):</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="k">for</span> <span class="n">jj</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                    <span class="n">train_indices</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="n">jj</span><span class="p">)</span>
+                    <span class="n">val_indices</span> <span class="o">=</span> <span class="o">~</span><span class="n">train_indices</span>
+                    <span class="n">val_prediction</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">train_indices</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="n">train_indices</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">val_indices</span><span class="p">,</span> <span class="p">:],</span> 
+                                                     <span class="n">n_neighbors</span><span class="p">,</span> <span class="n">distance_weighting</span><span class="p">)</span>
+                    <span class="n">score</span> <span class="o">-=</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">val_indices</span><span class="p">]</span><span class="o">-</span><span class="n">val_prediction</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>    
+                <span class="n">scores</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span><span class="o">/</span><span class="p">(</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># (stratified) cross-validation</span>
+            <span class="n">kf</span> <span class="o">=</span> <span class="n">KFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">n_folds_in_cv</span><span class="p">)</span>
+            <span class="n">kf</span><span class="o">.</span><span class="n">get_n_splits</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">n_neighbors</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">n_neighbors_options</span><span class="p">):</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="k">for</span> <span class="n">jj</span><span class="p">,</span> <span class="p">(</span><span class="n">train_indices</span><span class="p">,</span> <span class="n">val_indices</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">kf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)):</span>
+                    <span class="n">score</span> <span class="o">+=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">train_indices</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="n">train_indices</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">val_indices</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="n">val_indices</span><span class="p">],</span> 
+                                           <span class="n">n_neighbors</span><span class="p">,</span> <span class="n">distance_weighting</span><span class="p">)</span>    
+                <span class="n">scores</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span><span class="o">/</span><span class="p">(</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">n_neighbors_options</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)]</span>
+        <span class="c1"># return stats</span>
+        <span class="k">return</span> <span class="n">scores</span>
+
+    <span class="k">def</span> <span class="nf">my_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_new</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">x_new</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">distance_weighting</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="experimentation-with-the-new-code">
+<h2>Experimentation with the new code<a class="headerlink" href="#experimentation-with-the-new-code" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create model instance</span>
+<span class="n">my_kNN</span> <span class="o">=</span> <span class="n">MyNearestNeighborRegressor</span><span class="p">()</span>
+
+<span class="c1"># fit model and assess performance</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">my_kNN</span><span class="o">.</span><span class="n">my_fit</span><span class="p">(</span><span class="n">X_trainval</span><span class="p">,</span> <span class="n">y_trainval</span><span class="p">,</span> <span class="n">n_neighbors_options</span><span class="p">,</span> <span class="kc">True</span><span class="p">,</span> <span class="kc">None</span><span class="p">)</span> 
+
+<span class="c1"># plot fitting and prediction results</span>
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">16</span><span class="p">])</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n_neighbors_options</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;score in fitting&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;best k: </span><span class="si">{</span><span class="n">my_kNN</span><span class="o">.</span><span class="n">k</span><span class="si">}</span><span class="s1">, score: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="mi">1000</span><span class="p">),</span> <span class="n">create_noiseless_process_output</span><span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">linspace</span><span class="p">(</span><span class="n">x_min</span><span class="p">,</span> <span class="n">x_max</span><span class="p">,</span> <span class="mi">1000</span><span class="p">)</span><span class="o">.</span><span class="n">ravel</span><span class="p">(),</span> <span class="n">clean_data_process</span><span class="p">),</span> 
+        <span class="s1">&#39;k--&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Noiseless process&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_trainval</span><span class="p">,</span> <span class="n">y_trainval</span><span class="p">,</span> <span class="s1">&#39;ro&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="s1">&#39;Noisy observations (trainval datapoints)&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">my_kNN</span><span class="o">.</span><span class="n">my_predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="s1">&#39;b-&#39;</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">my_kNN</span><span class="o">.</span><span class="n">k</span><span class="si">}</span><span class="s1">-NN predictions&#39;</span><span class="p">,</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">markersize</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">linewidth</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">legend</span><span class="p">();</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/688f1ee28b1ae511aede08b8d3acafa11abb119180a4f8917f980cf7ea253604.png" src="../../_images/688f1ee28b1ae511aede08b8d3acafa11abb119180a4f8917f980cf7ea253604.png" />
+</div>
+</div>
+</section>
+</section>
+<section class="tex2jax_ignore mathjax_ignore" id="classification">
+<h1>Classification<a class="headerlink" href="#classification" title="Permalink to this heading">#</a></h1>
+<section id="coding-creating-a-new-class-that-extends-the-base-class-with-fitting-of-k-similar-to-as-done-in-the-regression-above">
+<h2>Coding: creating a new class that extends the base class with fitting of k (similar to as done in the regression above)<a class="headerlink" href="#coding-creating-a-new-class-that-extends-the-base-class-with-fitting-of-k-similar-to-as-done-in-the-regression-above" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="k">class</span> <span class="nc">MyNearestNeighborClassifier</span><span class="p">(</span><span class="n">NearestNeighborClassifier</span><span class="p">):</span>
+    
+    <span class="k">def</span> <span class="fm">__init__</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">name</span><span class="o">=</span><span class="s1">&#39;my_nearest_neighbor_classifier&#39;</span><span class="p">):</span>
+        <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="fm">__init__</span><span class="p">()</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">name</span> <span class="o">=</span> <span class="n">name</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="kc">None</span>
+        
+    <span class="k">def</span> <span class="nf">my_score</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_new</span><span class="p">,</span> <span class="n">y_new</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">x_new</span><span class="p">,</span> <span class="n">y_new</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>	
+
+    <span class="k">def</span> <span class="nf">my_fit</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">,</span> <span class="n">n_neighbors_options</span><span class="p">,</span> <span class="n">n_folds_in_cv</span><span class="o">=</span><span class="kc">None</span><span class="p">,</span> <span class="n">fit_criteria</span><span class="o">=</span><span class="s1">&#39;accuracy&#39;</span><span class="p">):</span>
+        <span class="c1"># memorize training data</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">x</span> <span class="o">=</span> <span class="n">x</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">y</span> <span class="o">=</span> <span class="n">y</span>
+        <span class="c1"># choose and store k</span>
+        <span class="n">scores</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">empty</span><span class="p">(</span><span class="n">n_neighbors_options</span><span class="o">.</span><span class="n">shape</span><span class="p">)</span>
+        <span class="k">if</span> <span class="n">n_folds_in_cv</span> <span class="ow">is</span> <span class="kc">None</span><span class="p">:</span>  <span class="c1"># leave-one-out</span>
+            <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">n_neighbors</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">n_neighbors_options</span><span class="p">):</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="k">for</span> <span class="n">jj</span> <span class="ow">in</span> <span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">]):</span>
+                    <span class="n">train_indices</span> <span class="o">=</span> <span class="p">(</span><span class="n">np</span><span class="o">.</span><span class="n">arange</span><span class="p">(</span><span class="n">x</span><span class="o">.</span><span class="n">shape</span><span class="p">[</span><span class="mi">0</span><span class="p">])</span> <span class="o">!=</span> <span class="n">jj</span><span class="p">)</span>
+                    <span class="n">val_indices</span> <span class="o">=</span> <span class="o">~</span><span class="n">train_indices</span>
+                    <span class="n">val_prediction</span> <span class="o">=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">train_indices</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="n">train_indices</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">val_indices</span><span class="p">,</span> <span class="p">:],</span> <span class="n">n_neighbors</span><span class="p">)</span>
+                    <span class="n">score</span> <span class="o">-=</span> <span class="p">(</span><span class="n">y</span><span class="p">[</span><span class="n">val_indices</span><span class="p">]</span><span class="o">-</span><span class="n">val_prediction</span><span class="p">)[</span><span class="mi">0</span><span class="p">]</span><span class="o">**</span><span class="mi">2</span>    
+                <span class="n">scores</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span><span class="o">/</span><span class="p">(</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="k">else</span><span class="p">:</span>  <span class="c1"># (stratified) cross-validation</span>
+            <span class="n">skf</span> <span class="o">=</span> <span class="n">StratifiedKFold</span><span class="p">(</span><span class="n">n_splits</span><span class="o">=</span><span class="n">n_folds_in_cv</span><span class="p">)</span>
+            <span class="n">skf</span><span class="o">.</span><span class="n">get_n_splits</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)</span>
+            <span class="k">for</span> <span class="n">ii</span><span class="p">,</span> <span class="n">n_neighbors</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">n_neighbors_options</span><span class="p">):</span>
+                <span class="n">score</span> <span class="o">=</span> <span class="mf">0.</span>
+                <span class="k">for</span> <span class="n">jj</span><span class="p">,</span> <span class="p">(</span><span class="n">train_indices</span><span class="p">,</span> <span class="n">val_indices</span><span class="p">)</span> <span class="ow">in</span> <span class="nb">enumerate</span><span class="p">(</span><span class="n">skf</span><span class="o">.</span><span class="n">split</span><span class="p">(</span><span class="n">x</span><span class="p">,</span> <span class="n">y</span><span class="p">)):</span>
+                    <span class="n">score</span> <span class="o">+=</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">score</span><span class="p">(</span><span class="n">x</span><span class="p">[</span><span class="n">train_indices</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="n">train_indices</span><span class="p">],</span> <span class="n">x</span><span class="p">[</span><span class="n">val_indices</span><span class="p">,</span> <span class="p">:],</span> <span class="n">y</span><span class="p">[</span><span class="n">val_indices</span><span class="p">],</span> <span class="n">n_neighbors</span><span class="p">)[</span><span class="n">fit_criteria</span><span class="p">]</span>    
+                <span class="n">scores</span><span class="p">[</span><span class="n">ii</span><span class="p">]</span> <span class="o">=</span> <span class="n">score</span><span class="o">/</span><span class="p">(</span><span class="n">jj</span><span class="o">+</span><span class="mi">1</span><span class="p">)</span>
+        <span class="bp">self</span><span class="o">.</span><span class="n">k</span> <span class="o">=</span> <span class="n">n_neighbors_options</span><span class="p">[</span><span class="n">np</span><span class="o">.</span><span class="n">argmax</span><span class="p">(</span><span class="n">scores</span><span class="p">)]</span>
+        <span class="c1"># return stats</span>
+        <span class="k">return</span> <span class="n">scores</span>
+
+    <span class="k">def</span> <span class="nf">my_predict</span><span class="p">(</span><span class="bp">self</span><span class="p">,</span> <span class="n">x_new</span><span class="p">):</span>
+        <span class="k">return</span> <span class="nb">super</span><span class="p">()</span><span class="o">.</span><span class="n">predict</span><span class="p">(</span><span class="bp">self</span><span class="o">.</span><span class="n">x</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">y</span><span class="p">,</span> <span class="n">x_new</span><span class="p">,</span> <span class="bp">self</span><span class="o">.</span><span class="n">k</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="data">
+<h2>Data<a class="headerlink" href="#data" title="Permalink to this heading">#</a></h2>
+<p>Utilize the above data, so that the datapoints serve as features.</p>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># a helper function to create labels</span>
+<span class="k">def</span> <span class="nf">create_labels</span><span class="p">(</span><span class="n">xy</span><span class="p">,</span> <span class="n">clean_data_process_name</span><span class="p">):</span>
+    <span class="k">if</span> <span class="n">clean_data_process_name</span> <span class="o">==</span> <span class="s1">&#39;cosine&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="n">np</span><span class="o">.</span><span class="n">logical_and</span><span class="p">(</span><span class="n">xy</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">&gt;=-</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">xy</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">&lt;=</span><span class="mf">0.5</span><span class="p">)</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> 
+    <span class="k">elif</span> <span class="n">clean_data_process_name</span> <span class="o">==</span> <span class="s1">&#39;logistic_sigmoid&#39;</span><span class="p">:</span>
+        <span class="k">return</span> <span class="p">(</span><span class="n">xy</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">]</span><span class="o">&gt;=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">xy</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">])</span><span class="o">.</span><span class="n">astype</span><span class="p">(</span><span class="nb">int</span><span class="p">)</span> 
+</pre></div>
+</div>
+</div>
+</div>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="n">X_trainval</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X_trainval</span><span class="p">,</span> <span class="n">y_trainval</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">X_test</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">concatenate</span><span class="p">((</span><span class="n">X_test</span><span class="p">,</span> <span class="n">y_test</span><span class="p">[:,</span> <span class="n">np</span><span class="o">.</span><span class="n">newaxis</span><span class="p">]),</span> <span class="n">axis</span><span class="o">=</span><span class="mi">1</span><span class="p">)</span>
+<span class="n">y_trainval</span> <span class="o">=</span> <span class="n">create_labels</span><span class="p">(</span><span class="n">X_trainval</span><span class="p">,</span> <span class="n">clean_data_process</span><span class="p">)</span>
+<span class="n">y_test</span> <span class="o">=</span> <span class="n">create_labels</span><span class="p">(</span><span class="n">X_test</span><span class="p">,</span> <span class="n">clean_data_process</span><span class="p">)</span>
+</pre></div>
+</div>
+</div>
+</div>
+</section>
+<section id="experiments">
+<h2>Experiments<a class="headerlink" href="#experiments" title="Permalink to this heading">#</a></h2>
+<div class="cell docutils container">
+<div class="cell_input docutils container">
+<div class="highlight-ipython3 notranslate"><div class="highlight"><pre><span></span><span class="c1"># create model instance</span>
+<span class="n">my_kNN</span> <span class="o">=</span> <span class="n">MyNearestNeighborClassifier</span><span class="p">()</span>
+
+<span class="c1"># fit model and assess performance</span>
+<span class="n">scores</span> <span class="o">=</span> <span class="n">my_kNN</span><span class="o">.</span><span class="n">my_fit</span><span class="p">(</span><span class="n">X_trainval</span><span class="p">,</span> <span class="n">y_trainval</span><span class="p">,</span> <span class="n">n_neighbors_options</span><span class="p">)</span> 
+
+<span class="c1"># plot fitting and prediction results</span>
+<span class="n">class_colors</span> <span class="o">=</span> <span class="n">np</span><span class="o">.</span><span class="n">array</span><span class="p">([[</span><span class="mf">1.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">],</span> <span class="p">[</span><span class="mf">0.</span><span class="p">,</span> <span class="mf">0.</span><span class="p">,</span> <span class="mf">1.</span><span class="p">]])</span>
+
+<span class="n">fig</span><span class="p">,</span> <span class="p">(</span><span class="n">ax1</span><span class="p">,</span> <span class="n">ax2</span><span class="p">,</span> <span class="n">ax3</span><span class="p">,</span> <span class="n">ax4</span><span class="p">)</span> <span class="o">=</span> <span class="n">plt</span><span class="o">.</span><span class="n">subplots</span><span class="p">(</span><span class="n">nrows</span><span class="o">=</span><span class="mi">4</span><span class="p">,</span> <span class="n">ncols</span><span class="o">=</span><span class="mi">1</span><span class="p">,</span> <span class="n">figsize</span><span class="o">=</span><span class="p">[</span><span class="mi">8</span><span class="p">,</span> <span class="mi">32</span><span class="p">])</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">plot</span><span class="p">(</span><span class="n">n_neighbors_options</span><span class="p">,</span> <span class="n">scores</span><span class="p">,</span> <span class="s1">&#39;o-&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_xlabel</span><span class="p">(</span><span class="s1">&#39;k&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_ylabel</span><span class="p">(</span><span class="s1">&#39;score in fitting&#39;</span><span class="p">)</span>
+<span class="n">ax1</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="sa">f</span><span class="s1">&#39;best k: </span><span class="si">{</span><span class="n">my_kNN</span><span class="o">.</span><span class="n">k</span><span class="si">}</span><span class="s1">, score: </span><span class="si">{</span><span class="n">np</span><span class="o">.</span><span class="n">max</span><span class="p">(</span><span class="n">scores</span><span class="p">)</span><span class="si">}</span><span class="s1">&#39;</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_trainval</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_trainval</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="n">y_trainval</span><span class="p">,</span> <span class="p">:],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax2</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Trainval datapoints&#39;</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_test</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="n">y_test</span><span class="p">,</span> <span class="p">:],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">)</span>
+<span class="n">ax3</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Test datapoints with true label colors&#39;</span><span class="p">)</span>
+<span class="n">ax4</span><span class="o">.</span><span class="n">scatter</span><span class="p">(</span><span class="n">X_test</span><span class="p">[:,</span> <span class="mi">0</span><span class="p">],</span> <span class="n">X_test</span><span class="p">[:,</span> <span class="mi">1</span><span class="p">],</span> <span class="n">c</span><span class="o">=</span><span class="n">class_colors</span><span class="p">[</span><span class="n">my_kNN</span><span class="o">.</span><span class="n">my_predict</span><span class="p">(</span><span class="n">X_test</span><span class="p">),</span> <span class="p">:],</span> <span class="n">alpha</span><span class="o">=</span><span class="mf">0.5</span><span class="p">,</span> <span class="n">s</span><span class="o">=</span><span class="mi">2</span><span class="p">,</span> <span class="n">label</span><span class="o">=</span><span class="sa">f</span><span class="s1">&#39;</span><span class="si">{</span><span class="n">my_kNN</span><span class="o">.</span><span class="n">k</span><span class="si">}</span><span class="s1">-NN predictions&#39;</span><span class="p">)</span>
+<span class="n">ax4</span><span class="o">.</span><span class="n">set_title</span><span class="p">(</span><span class="s1">&#39;Test datapoints with color based on predicted class&#39;</span><span class="p">);</span>
+</pre></div>
+</div>
+</div>
+<div class="cell_output docutils container">
+<img alt="../../_images/eacd2db7f2d8666195680f8120c49c33195baf4d08212889679955d4e168b080.png" src="../../_images/eacd2db7f2d8666195680f8120c49c33195baf4d08212889679955d4e168b080.png" />
+</div>
+</div>
+</section>
+</section>
+
+    <script type="text/x-thebe-config">
+    {
+        requestKernel: true,
+        binderOptions: {
+            repo: "luma-lapinamk/jyri-mla23",
+            ref: "main",
+        },
+        codeMirrorConfig: {
+            theme: "abcdef",
+            mode: "python"
+        },
+        kernelOptions: {
+            name: "python3",
+            path: "./notebooks/supervised_learning"
+        },
+        predefinedOutput: true
+    }
+    </script>
+    <script>kernelName = 'python3'</script>
+
+                </article>
+              
+
+              
+              
+                <footer class="bd-footer-article">
+                  
+<div class="footer-article-items footer-article__inner">
+  
+    <div class="footer-article-item"><!-- Previous / next buttons -->
+<div class="prev-next-area">
+    <a class="left-prev"
+       href="classification_and_regression_with_k-nearest_neighbors.html"
+       title="previous page">
+      <i class="fa-solid fa-angle-left"></i>
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">previous</p>
+        <p class="prev-next-title">Classification and regression with k-nearest neighbors</p>
+      </div>
+    </a>
+    <a class="right-next"
+       href="classification_and_regression_with_neural_networks.html"
+       title="next page">
+      <div class="prev-next-info">
+        <p class="prev-next-subtitle">next</p>
+        <p class="prev-next-title">Classification and regression with neural networks</p>
+      </div>
+      <i class="fa-solid fa-angle-right"></i>
+    </a>
+</div></div>
+  
+</div>
+
+                </footer>
+              
+            </div>
+            
+            
+              
+                <div class="bd-sidebar-secondary bd-toc"><div class="sidebar-secondary-items sidebar-secondary__inner">
+
+  <div class="sidebar-secondary-item">
+  <div class="page-toc tocsection onthispage">
+    <i class="fa-solid fa-list"></i> Contents
+  </div>
+  <nav class="bd-toc-nav page-toc">
+    <ul class="visible nav section-nav flex-column">
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#">Example kNN regression and classification</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#code-imports">Code imports</a></li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#a-basic-regression-example">A basic regression example</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#nearest-neighbor-code">Nearest neighbor code</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#selecting-a-value-for-k">Selecting a value for k</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-creating-a-new-class-that-extends-the-base-class-with-fitting-of-k">Coding: creating a new class that extends the base class with fitting of k</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experimentation-with-the-new-code">Experimentation with the new code</a></li>
+</ul>
+</li>
+<li class="toc-h1 nav-item toc-entry"><a class="reference internal nav-link" href="#classification">Classification</a><ul class="visible nav section-nav flex-column">
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#coding-creating-a-new-class-that-extends-the-base-class-with-fitting-of-k-similar-to-as-done-in-the-regression-above">Coding: creating a new class that extends the base class with fitting of k (similar to as done in the regression above)</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#data">Data</a></li>
+<li class="toc-h2 nav-item toc-entry"><a class="reference internal nav-link" href="#experiments">Experiments</a></li>
+</ul>
+</li>
+</ul>
+
+  </nav></div>
+
+</div></div>
+              
+            
+          </div>
+          <footer class="bd-footer-content">
+            
+<div class="bd-footer-content__inner container">
+  
+  <div class="footer-item">
+    
+<p class="component-author">
+By <a href="https://luma-lapinamk.pub">LUMA-team</a> (<a href="mailto:luma@lapinamk.fi">luma@lapinamk.fi</a>), <a href="https://www.lapinamk.fi/en">Lapland UAS</a> / Jyri Kivinen (<a href="mailto:jyri.kivinen@lapinamk.fi">jyri.kivinen@lapinamk.fi</a>)
+</p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  <p class="copyright">
+    
+      © Copyright 2023.
+      <br/>
+    
+  </p>
+
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+  <div class="footer-item">
+    
+  </div>
+  
+</div>
+          </footer>
+        
+
+      </main>
+    </div>
+  </div>
+  
+  <!-- Scripts loaded after <body> so the DOM is not blocked -->
+  <script src="../../_static/scripts/bootstrap.js?digest=e353d410970836974a52"></script>
+<script src="../../_static/scripts/pydata-sphinx-theme.js?digest=e353d410970836974a52"></script>
+
+  <footer class="bd-footer">
+  </footer>
+  </body>
+</html>
